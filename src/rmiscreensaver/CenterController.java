@@ -25,4 +25,5 @@ public interface CenterController extends Remote{
     public boolean start() throws RemoteException;
     public boolean bcstart() throws RemoteException;
     public void putClientQueue(ArrayList<CharacterMessage> arrChars) throws RemoteException;
+    public void signOut(String id) throws RemoteException;
 }

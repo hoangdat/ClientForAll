@@ -1,11 +1,8 @@
 package main;
 
-import java.awt.BorderLayout;
-import java.awt.Dialog;
+
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -13,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.URL;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -22,7 +20,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
-import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -57,6 +54,8 @@ public class Framework extends Canvas {
     
     JTextField txtIP;
     JButton btnConnect;
+    BufferedImage btnClose;
+    
 
     
     private static final int countTest = 5;
@@ -233,7 +232,13 @@ public class Framework extends Canvas {
      */
     private void LoadContent()
     {
-    
+        try {
+            URL btnCloseURL = getClass().getClassLoader()
+                    .getResource("main/characterimg/close.png");
+            btnClose = ImageIO.read(btnCloseURL);
+        } catch (IOException ex) {
+            Logger.getLogger(Framework.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     
@@ -403,25 +408,33 @@ public class Framework extends Canvas {
         {
             case PLAYING:
                 game.Draw(g2d, mousePosition());
+                //close button
+                g2d.drawImage(btnClose, frameWidth - 40, 10, 30, 30, null);
             break;
             case GAMEOVER:
                 //...
             break;
             case MAIN_MENU:
                 try {
+                    //draw a menu for background
+                    //calculate for option item
+                    optionItemWidth = (frameWidth / 10) * 4;
+                    optionItemHeight = frameHeight / 8;
+                    x_Item = frameWidth / 2 - 2 - optionItemWidth;
                     
                     URL bgMenuURL = getClass().getClassLoader()
                             .getResource("main/characterimg/backgroundSpace2.png");
                     BufferedImage bgMenuBF = ImageIO.read(bgMenuURL);
                     g2d.drawImage(bgMenuBF, 0, 0, frameWidth, frameHeight, null);
                     
+                    
                     if (isAdmin) {
-                        
-                        //draw a menu for background
-                        //calculate for option item
-                        optionItemWidth = (frameWidth / 10) * 4;
-                        optionItemHeight = frameHeight / 8;
-                        x_Item = frameWidth / 2 - 2 - optionItemWidth;
+                        URL playURL = getClass().getClassLoader()
+                            .getResource("main/characterimg/play.png");
+                        BufferedImage playBF = ImageIO.read(playURL);
+                        g2d.drawImage(playBF, frameWidth / 12 * 10, frameHeight / 10 * 8, 
+                                optionItemHeight, optionItemHeight, null);
+
                         
                         URL op1URL = getClass().getClassLoader().getResource("main/characterimg/footballBg.png");
                         BufferedImage bfOp1 = ImageIO.read(op1URL);
@@ -544,6 +557,7 @@ public class Framework extends Canvas {
         if (isAdmin) {
             switch (gameState) {
                 
+                
                 case MAIN_MENU:
                     if (e.getButton() == MouseEvent.BUTTON1){
                         
@@ -563,7 +577,7 @@ public class Framework extends Canvas {
                             nameBackground = "main/characterimg/backgroundAction3.png";
                             countClickInMenu += 1;
                         } // go button
-                        else if (new Rectangle(frameWidth / 12 * 11, frameHeight/10 * 9, optionItemHeight, optionItemHeight)
+                        else if (new Rectangle(frameWidth / 12 * 10, frameHeight/10 * 8, optionItemHeight, optionItemHeight)
                                 .contains(e.getPoint())) {
                             isGoClicked = true;
                             countClickInMenu += 1;
@@ -587,6 +601,24 @@ public class Framework extends Canvas {
                         }
                         
                     }    
+                    break;
+            }
+        } else {
+            switch (gameState) {
+                case PLAYING:
+                    if (e.getButton() == MouseEvent.BUTTON1) {
+                        
+                        if (new Rectangle(frameWidth - 40, 10, 30, 30)
+                                .contains(e.getPoint())) {
+                            try {
+                                server.signOut(id);
+                                System.exit(0);
+                            } catch (RemoteException ex) {
+                                Logger.getLogger(Framework.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    }
+                  
                     break;
             }
         }

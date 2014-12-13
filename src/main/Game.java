@@ -282,7 +282,7 @@ public class Game {
      * @param mousePosition current mouse position.
      */
     public void Draw(Graphics2D g2d, Point mousePosition)
-    {
+    {   
         g2d.drawImage(backgroundImg, 0, 0, Framework.frameWidth, 
                                         Framework.frameHeight, null);
         

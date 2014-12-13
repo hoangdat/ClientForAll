@@ -29,20 +29,7 @@ public class Window extends JFrame{
         // Exit the application when user close frame.
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-//        JTextField txtIP = new JTextField();
-//        txtIP.setPreferredSize(new Dimension(175, 100));
-//        
-//        JButton btnConnect = new JButton("Connnect");
-//        this.getContentPane().add(txtIP, BorderLayout.CENTER);
-//        this.getContentPane().add(btnConnect, BorderLayout.SOUTH);
-//        
-//        btnConnect.addActionListener(new ActionListener() {
-//
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                setContent();
-//            }
-//        });
+
         // Creates the instance of the Framework.java that extends the Canvas.java and puts it on the frame.
         this.setContentPane(new Framework());
         
@@ -60,10 +47,4 @@ public class Window extends JFrame{
         });
     }
     
-//    public void setContent() {
-//        this.getContentPane().removeAll();
-//        this.setContentPane(new Framework());
-//        this.revalidate();
-//        this.repaint();
-//    }
 }
